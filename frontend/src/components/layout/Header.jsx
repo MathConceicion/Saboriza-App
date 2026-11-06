@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useCart } from "../../context/CartContext"
 import { HybridButton } from "./HybridButton"
+import { StoreSearch } from "./StoreSearch"
 import { Icon } from "../ui/Icon"
 
 export function Header() {
@@ -17,14 +18,23 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
-      <div className="px-4 sm:px-6 lg:px-12 h-16 flex items-center justify-between">
-        <Link to="/buscar" aria-label="Saboriza - marketplace" className="flex items-center">
+      <div className="px-4 sm:px-6 lg:px-12 py-2 sm:h-16 sm:py-0 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2 sm:gap-x-4">
+        <Link to="/buscar" aria-label="Saboriza - marketplace" className="order-1 flex shrink-0 items-center">
           <img src="/favicon.ico" alt="Logo Saboriza" className="h-10 w-10 rounded-full object-cover" />
         </Link>
-        <nav className="flex items-center gap-2 sm:gap-3">
+        <div className="order-3 w-full sm:order-2 sm:w-auto sm:flex-1 sm:max-w-xl">
+          <StoreSearch />
+        </div>
+        <nav className="order-2 ml-auto flex items-center gap-2 sm:order-3 sm:gap-3">
           <HybridButton />
           {user ? (
             <>
+              {!user.isAdmin && !isVendorAprovado && !isVendedor ? (
+                <Link to="/vender" className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg">
+                  <Icon name="store" className="h-4 w-4" />
+                  Quero vender
+                </Link>
+              ) : null}
               {!user.isAdmin ? (
                 <Link to="/checkout" aria-label={`Abrir carrinho com ${qtdCarrinho} itens`} className="relative text-neutral-600 hover:text-primary border border-neutral-200 rounded-full p-2">
                   <Icon name="cart" className="h-5 w-5" />
@@ -40,7 +50,6 @@ export function Header() {
                     <Link to="/buscar" className="block px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-neutral-100 hover:text-primary">Pedir</Link>
                     <Link to="/meus-pedidos" className="block px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-neutral-100 hover:text-primary">Meus pedidos</Link>
                     <Link to="/conta" className="block px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-primary">Minha conta</Link>
-                    {!user.isAdmin && !isVendorAprovado && !isVendedor ? <Link to="/vender" className="block px-4 py-2 text-sm text-primary font-semibold hover:bg-neutral-100">Quero vender</Link> : null}
                     {user.isAdmin ? <Link to="/admin" className="block px-4 py-2 text-sm font-semibold text-danger hover:bg-neutral-100">Admin</Link> : null}
                   </div>
                 </div>

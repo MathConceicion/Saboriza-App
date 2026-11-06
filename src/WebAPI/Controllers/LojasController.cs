@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GastronomiaMarketplace.Application.Common.Interfaces;
+using GastronomiaMarketplace.Application.Lojas.Queries.BuscarLojas;
 using GastronomiaMarketplace.Application.Lojas.Queries.ListarLojasProximas;
 
 [ApiController]
@@ -17,6 +18,17 @@ public sealed class LojasController : ControllerBase
     {
         _mediator = mediator;
         _geocoding = geocoding;
+    }
+
+    [HttpGet("buscar")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Buscar(
+        [FromQuery] string? termo = null,
+        [FromQuery] int limite = 50,
+        CancellationToken ct = default)
+    {
+        var result = await _mediator.Send(new BuscarLojasQuery(termo, limite), ct);
+        return Ok(result);
     }
 
     [HttpGet("proximas")]

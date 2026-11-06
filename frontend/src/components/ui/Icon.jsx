@@ -93,6 +93,12 @@ const paths = {
       <circle cx="17" cy="20" r="1.4" />
     </>
   ),
+  search: (
+    <>
+      <circle cx="11" cy="11" r="7" />
+      <path d="M20 20l-3.5-3.5" />
+    </>
+  ),
   logout: (
     <>
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -117,6 +123,6 @@ export function Icon({ name, className }) {
 }
 
 Icon.propTypes = {
-  name: PropTypes.oneOf(["trash", "store", "chart", "camera", "utensils", "star", "arrowLeft", "check", "mail", "lock", "eye", "eyeOff", "user", "id", "cart", "logout", "x"]).isRequired,
+  name: PropTypes.oneOf(["trash", "store", "chart", "camera", "utensils", "star", "arrowLeft", "check", "mail", "lock", "eye", "eyeOff", "user", "id", "cart", "search", "logout", "x"]).isRequired,
   className: PropTypes.string,
 }

@@ -13,4 +13,7 @@ export const lojasService = {
   obter(lojaId) {
     return apiClient.get(`/api/lojas/${lojaId}`).then((r) => r.data)
   },
+  buscar(termo, { signal } = {}) {
+    return apiClient.get("/api/lojas/buscar", { params: { termo: termo ?? "", limite: 50 }, signal }).then((r) => r.data)
+  },
 }
