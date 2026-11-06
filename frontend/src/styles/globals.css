@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: 193 39 45;
+  --color-primary-dark: 160 30 36;
+  --color-secondary: 248 187 208;
+  --color-accent: 242 193 78;
+  --color-neutral-900: 26 26 26;
+  --color-neutral-600: 107 114 128;
+  --color-neutral-200: 229 231 235;
+  --color-success: 46 125 50;
+  --color-info: 25 118 210;
+  --color-danger: 198 40 40;
+  --color-warning: 239 108 0;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+}
+
+* {
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+body {
+  background-color: #F9FAFB;
+  color: #1A1A1A;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}

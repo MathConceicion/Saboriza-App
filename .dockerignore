@@ -1,0 +1,15 @@
+.git
+.gitignore
+bin
+obj
+TestEnc
+keys
+node_modules
+frontend/node_modules
+frontend/dist
+*.log
+tmp*.sql
+conc*.txt
+.vs
+.idea
+.env.local
