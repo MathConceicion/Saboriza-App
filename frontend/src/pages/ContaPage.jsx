@@ -6,9 +6,9 @@ import { usuariosService } from "../services/usuarios.service"
 import { authService } from "../services/auth.service"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
-import { Badge } from "../components/ui/Badge"
+import { Card } from "../components/ui/Card"
+import { Icon } from "../components/ui/Icon"
 import { mensagemPorStatus } from "../lib/apiErrors"
-import { Toast } from "../components/ui/Toast"
 
 export default function ContaPage() {
   const navigate = useNavigate()
@@ -105,12 +105,8 @@ export default function ContaPage() {
             <div className="space-y-4">
               {/* Nome */}
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
-                  <img
-                    src="/placeholder-user.svg"
-                    alt="Avatar do usuário"
-                    className="h-10 w-10 rounded-full object-cover border border-neutral-200"
-                  />
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100 text-neutral-500">
+                  <Icon name="user" className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="text-sm text-neutral-500">Nome</p>
@@ -122,12 +118,8 @@ export default function ContaPage() {
 
               {/* Email */}
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
-                  <img
-                    src="/mail-icon.svg"
-                    alt="Email"
-                    className="h-5 w-5 text-neutral-400 flex-shrink-0 mt-1"
-                  />
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100 text-neutral-500">
+                  <Icon name="mail" className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="text-sm text-neutral-500">Email</p>

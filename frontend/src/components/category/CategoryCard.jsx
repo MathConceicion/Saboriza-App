@@ -1,13 +1,14 @@
 import PropTypes from "prop-types"
 import { tratarErroImagemComFallback } from "../../lib/imagens"
 
-export function CategoryCard({ nome, slug, iconeUrl, reservaUrl, ativa, onSelect }) {
+export function CategoryCard({ nome, slug, iconeUrl, reservaUrl, ativa, onSelect, className = "" }) {
   return (
     <button
       onClick={() => onSelect(slug)}
       className={[
         "flex flex-col items-center gap-2 p-2 rounded-2xl transition-all",
         ativa ? "bg-primary text-white shadow-md scale-105" : "bg-white hover:shadow-md hover:-translate-y-0.5",
+        className,
       ].join(" ")}
       aria-label={`Ver lojas de ${nome}`}
     >
@@ -31,13 +32,31 @@ CategoryCard.propTypes = {
   reservaUrl: PropTypes.string,
   ativa: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
+  className: PropTypes.string,
+}
+
+function classeDaCategoria(indice, total) {
+  const classes = ["col-span-2 sm:col-span-1"]
+  if (indice !== total - 2) return classes.join(" ")
+  if (total % 3 === 2) classes.push("col-start-2", "sm:col-start-auto")
+  if (total % 6 === 2) classes.push("md:col-start-3", "lg:col-start-auto")
+  return classes.join(" ")
 }
 
 export function CategoryGrid({ categorias, categoriaAtiva, onSelectCategoria }) {
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-      {categorias.map((c) => (
-        <CategoryCard key={c.slug} nome={c.nome} slug={c.slug} iconeUrl={c.iconeUrl} reservaUrl={c.reservaUrl} ativa={c.slug === categoriaAtiva} onSelect={onSelectCategoria} />
+    <div className="grid grid-cols-6 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+      {categorias.map((c, indice) => (
+        <CategoryCard
+          key={c.slug}
+          nome={c.nome}
+          slug={c.slug}
+          iconeUrl={c.iconeUrl}
+          reservaUrl={c.reservaUrl}
+          ativa={c.slug === categoriaAtiva}
+          onSelect={onSelectCategoria}
+          className={classeDaCategoria(indice, categorias.length)}
+        />
       ))}
     </div>
   )
