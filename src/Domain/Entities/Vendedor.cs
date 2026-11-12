@@ -44,6 +44,13 @@ public sealed class Vendedor : BaseEntity
             DefinirHorarioFuncionamentoJson(horarioFuncionamentoJson);
     }
 
+    public void DefinirEmAnalise()
+    {
+        if (Status == StatusVendedor.Aprovado || Status == StatusVendedor.Rejeitado) throw new RegraDeNegocioException($"Não é possível definir em análise a partir de {Status}.");
+        Status = StatusVendedor.EmAnalise;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
     public void Aprovar()
     {
         if (Status == StatusVendedor.Aprovado) throw new RegraDeNegocioException("Vendedor já aprovado.");
@@ -53,6 +60,7 @@ public sealed class Vendedor : BaseEntity
 
     public void Rejeitar(string motivo)
     {
+        if (Status == StatusVendedor.Rejeitado) throw new RegraDeNegocioException("Vendedor já rejeitado.");
         Status = StatusVendedor.Rejeitado;
         MotivoRejeicao = motivo;
         AtualizadoEmUtc = DateTime.UtcNow;

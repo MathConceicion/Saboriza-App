@@ -15,7 +15,15 @@ import PedidosVendedorPage from "../pages/PedidosVendedorPage"
 import ProdutosPage from "../pages/ProdutosPage"
 import ConfiguracoesPage from "../pages/ConfiguracoesPage"
 import { VendedorShell } from "../components/layout/VendedorShell"
-import AdminPage from "../pages/AdminPage"
+import AdminDashboardPage from "../pages/admin/AdminDashboardPage"
+import AdminSolicitacoesLojasPage from "../pages/admin/AdminSolicitacoesLojasPage"
+import AdminUsuariosPage from "../pages/admin/AdminUsuariosPage"
+import AdminLojasPage from "../pages/admin/AdminLojasPage"
+import AdminProdutosPage from "../pages/admin/AdminProdutosPage"
+import AdminNotificacoesPage from "../pages/admin/AdminNotificacoesPage"
+import AdminAuditoriaPage from "../pages/admin/AdminAuditoriaPage"
+import AdminConfiguracoesPage from "../pages/admin/AdminConfiguracoesPage"
+import AdminShell from "../components/layout/AdminShell"
 import ProtectedRoute from "./ProtectedRoute"
 import AppShell from "../components/layout/AppShell"
 
@@ -70,7 +78,22 @@ export const router = createBrowserRouter([
       {
         path: "/admin",
         element: <ProtectedRoute allowedRoles={["Admin"]} />,
-        children: [{ path: "", element: <AdminPage /> }],
+        children: [
+          {
+            element: <AdminShell />,
+            children: [
+              { index: true, element: <AdminDashboardPage /> },
+              { path: "dashboard", element: <AdminDashboardPage /> },
+              { path: "solicitacoes-lojas", element: <AdminSolicitacoesLojasPage /> },
+              { path: "usuarios", element: <AdminUsuariosPage /> },
+              { path: "lojas", element: <AdminLojasPage /> },
+              { path: "produtos", element: <AdminProdutosPage /> },
+              { path: "notificacoes", element: <AdminNotificacoesPage /> },
+              { path: "auditoria", element: <AdminAuditoriaPage /> },
+              { path: "configuracoes", element: <AdminConfiguracoesPage /> },
+            ],
+          },
+        ],
       },
     ],
   },

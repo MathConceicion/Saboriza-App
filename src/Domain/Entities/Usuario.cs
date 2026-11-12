@@ -19,6 +19,10 @@ public sealed class Usuario : AggregateRoot
     public string? RestricoesAlimentares { get; private set; }
     public string? ObservacoesSaude { get; private set; }
     public bool IsAnonimizado { get; private set; }
+    public bool IsBloqueado { get; private set; }
+    public DateTime? BloqueadoEmUtc { get; private set; }
+    public Guid? BloqueadoPorId { get; private set; }
+    public string? MotivoBloqueio { get; private set; }
     public Vendedor? Vendedor { get; private set; }
 
     private Usuario() { }
@@ -82,6 +86,27 @@ public sealed class Usuario : AggregateRoot
         if (telefone is not null) Telefone = telefone.Trim();
         if (enderecoAtual is not null) EnderecoAtual = enderecoAtual.Trim();
         if (cep is not null) Cep = cep.Trim();
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void Bloquear(DateTime bloqueadoEmUtc, Guid bloqueadoPorId, string? motivo)
+    {
+        if (IsBloqueado) throw new RegraDeNegocioException("Usuário já está bloqueado.");
+        if (Papel == PapelUsuario.Admin) throw new RegraDeNegocioException("Não é possível bloquear um administrador.");
+        IsBloqueado = true;
+        BloqueadoEmUtc = bloqueadoEmUtc;
+        BloqueadoPorId = bloqueadoPorId;
+        MotivoBloqueio = motivo;
+        AtualizadoEmUtc = bloqueadoEmUtc;
+    }
+
+    public void Desbloquear()
+    {
+        if (!IsBloqueado) throw new RegraDeNegocioException("Usuário não está bloqueado.");
+        IsBloqueado = false;
+        BloqueadoEmUtc = null;
+        BloqueadoPorId = null;
+        MotivoBloqueio = null;
         AtualizadoEmUtc = DateTime.UtcNow;
     }
 }

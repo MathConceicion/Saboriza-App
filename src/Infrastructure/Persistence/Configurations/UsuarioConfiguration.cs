@@ -53,6 +53,10 @@ public sealed class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         b.Property(u => u.Telefone).HasColumnType("varchar(20)");
         b.Property(u => u.SenhaHash).HasColumnType("varchar(255)").IsRequired();
         b.Property(u => u.IsAnonimizado).HasColumnType("boolean").HasDefaultValue(false);
+        b.Property(u => u.IsBloqueado).HasColumnType("boolean").HasDefaultValue(false);
+        b.Property(u => u.BloqueadoEmUtc).HasColumnType("timestamptz");
+        b.Property(u => u.BloqueadoPorId).HasColumnType("uuid");
+        b.Property(u => u.MotivoBloqueio).HasColumnType("varchar(500)");
         b.Property(u => u.CriadoEmUtc).HasColumnType("timestamptz").IsRequired();
         b.Property(u => u.AtualizadoEmUtc).HasColumnType("timestamptz");
         b.Property(u => u.IsDeleted).HasColumnType("boolean").HasDefaultValue(false);

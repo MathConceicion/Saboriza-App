@@ -48,6 +48,18 @@ public sealed class Loja : AggregateRoot
         AtualizadoEmUtc = DateTime.UtcNow;
     }
 
+    public void Desativar()
+    {
+        Ativo = false;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void Ativar()
+    {
+        Ativo = true;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
     public void AtualizarPerfil(string nome, string? descricao, string? fotoUrl)
     {
         if (string.IsNullOrWhiteSpace(nome)) throw new Exceptions.RegraDeNegocioException("Nome da loja obrigatório.");

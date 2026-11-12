@@ -25,6 +25,7 @@ public sealed class AppDbContext : DbContext, IAppDbContext
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<ConsentimentoLgpd> ConsentimentosLgpd => Set<ConsentimentoLgpd>();
     public DbSet<ConfiguracaoGlobal> ConfiguracoesGlobais => Set<ConfiguracaoGlobal>();
+    public DbSet<Notificacao> Notificacoes => Set<Notificacao>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,6 +39,7 @@ public sealed class AppDbContext : DbContext, IAppDbContext
         modelBuilder.ApplyConfiguration(new Configurations.ConsentimentoLgpdConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ConfiguracaoGlobalConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PedidoConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.NotificacaoConfiguration());
         if (_dpProvider is not null)
             modelBuilder.ApplyConfiguration(new Configurations.UsuarioConfiguration(_dpProvider));
         else

@@ -16,5 +16,6 @@ public interface IAppDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<ConsentimentoLgpd> ConsentimentosLgpd { get; }
     DbSet<ConfiguracaoGlobal> ConfiguracoesGlobais { get; }
+    DbSet<Notificacao> Notificacoes { get; }
     Task<int> SaveChangesAsync(CancellationToken ct);
 }

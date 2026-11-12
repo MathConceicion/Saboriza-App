@@ -378,6 +378,66 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
                     b.ToTable("Lojas", (string)null);
                 });
 
+            modelBuilder.Entity("GastronomiaMarketplace.Domain.Entities.Notificacao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime?>("AtualizadoEmUtc")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<DateTime>("CriadoEmUtc")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<string>("EntidadeId")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("EntidadeTipo")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("Lida")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LidaEmUtc")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<string>("Mensagem")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("Tipo")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<Guid?>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CriadoEmUtc");
+
+                    b.HasIndex("Lida");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Notificacoes", (string)null);
+                });
+
             modelBuilder.Entity("GastronomiaMarketplace.Domain.Entities.Pedido", b =>
                 {
                     b.Property<Guid>("Id")
@@ -521,6 +581,12 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("AtualizadoEmUtc")
                         .HasColumnType("timestamptz");
 
+                    b.Property<DateTime?>("BloqueadoEmUtc")
+                        .HasColumnType("timestamptz");
+
+                    b.Property<Guid?>("BloqueadoPorId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Cep")
                         .HasColumnType("varchar(9)");
 
@@ -542,10 +608,18 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsBloqueado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("MotivoBloqueio")
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("NomeCompleto")
                         .IsRequired()

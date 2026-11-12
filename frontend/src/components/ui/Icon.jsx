@@ -112,6 +112,37 @@ const paths = {
   x: (
     <path d="M6 6l12 12M18 6L6 18" />
   ),
+  users: (
+    <>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </>
+  ),
+  settings: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83l.06.06a2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2v-.5a1.65 1.65 0 0 0-1.82-.33l-.06-.06a2 2 0 0 1 0-2.83l.06-.06a2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82-.33h.5a1.65 1.65 0 0 0 1-1.51V14a2 2 0 0 1 2-2h.5a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l.06.06a2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82z" />
+    </>
+  ),
+  clipboard: (
+    <>
+      <rect x="8" y="3" width="8" height="4" rx="1" ry="1" />
+      <path d="M8 7H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+    </>
+  ),
 }
 
 export function Icon({ name, className }) {
@@ -123,6 +154,6 @@ export function Icon({ name, className }) {
 }
 
 Icon.propTypes = {
-  name: PropTypes.oneOf(["trash", "store", "chart", "camera", "utensils", "star", "arrowLeft", "check", "mail", "lock", "eye", "eyeOff", "user", "id", "cart", "search", "logout", "x"]).isRequired,
+  name: PropTypes.oneOf(["trash", "store", "chart", "camera", "utensils", "star", "arrowLeft", "check", "mail", "lock", "eye", "eyeOff", "user", "id", "cart", "search", "logout", "x", "users", "shield", "bell", "settings", "clipboard"]).isRequired,
   className: PropTypes.string,
 }

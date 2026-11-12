@@ -29,7 +29,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
-      ConnectionStrings__Default: Host=postgres;Port=5432;Database=gastronomia;Username=gastronomia_app;Password=${APP_DB_PASSWORD:?APP_DB_PASSWORD ausente}
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=gastronomia;Username=postgres;Password=postgres
       Jwt__Issuer: gastronomia-marketplace
       Jwt__Audience: gastronomia-marketplace-client
       Jwt__SecretKey: ${JWT_SECRET_KEY:?JWT_SECRET_KEY ausente}
