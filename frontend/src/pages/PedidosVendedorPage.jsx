@@ -9,6 +9,7 @@ import { Badge } from "../components/ui/Badge"
 import { Skeleton } from "../components/ui/Skeleton"
 import { EmptyState } from "../components/ui/EmptyState"
 import { Sheet } from "../components/ui/Sheet"
+import { Modal } from "../components/ui/Modal"
 import { BackButton } from "../components/ui/BackButton"
 import { formatPreco, formatDataHora } from "../lib/formatters"
 import { mensagemPorStatus } from "../lib/apiErrors"
@@ -61,6 +62,9 @@ function AbaAprovar() {
   const [loading, setLoading] = useState(true)
   const [erro, setErro] = useState(null)
   const [aprovandoId, setAprovandoId] = useState(null)
+  const [pedidoRecusa, setPedidoRecusa] = useState(null)
+  const [motivoRecusa, setMotivoRecusa] = useState("")
+  const [recusandoId, setRecusandoId] = useState(null)
 
   function carregar() {
     setLoading(true)
@@ -92,6 +96,33 @@ function AbaAprovar() {
     }
   }
 
+  function abrirRecusa(pedido) {
+    setPedidoRecusa(pedido)
+    setMotivoRecusa("")
+  }
+
+  function fecharRecusa() {
+    if (recusandoId) return
+    setPedidoRecusa(null)
+    setMotivoRecusa("")
+  }
+
+  async function handleRecusar() {
+    if (!pedidoRecusa) return
+    setRecusandoId(pedidoRecusa.pedidoId)
+    try {
+      await pedidosService.recusar(pedidoRecusa.pedidoId, motivoRecusa.trim())
+      showToast("Pedido recusado", "success")
+      setPedidoRecusa(null)
+      setMotivoRecusa("")
+      carregar()
+    } catch (e) {
+      showToast(mensagemPorStatus(e, "Não foi possível recusar."), "danger")
+    } finally {
+      setRecusandoId(null)
+    }
+  }
+
   if (loading) return <Skeleton variant="card" />
   if (erro) {
     return (
@@ -103,25 +134,48 @@ function AbaAprovar() {
   }
   if (pendentes.length === 0) return <EmptyState titulo="Nenhum pedido pendente" descricao="Novos pedidos dos clientes aparecem aqui." />
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {pendentes.map((p) => (
-        <div key={p.pedidoId} className="bg-white rounded-xl border border-neutral-200 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <strong>{p.clienteNome}</strong>
-            {p.pixSimulado ? <Badge tone="success">Pago (PIX)</Badge> : <Badge tone="warning">Aguardando pagto</Badge>}
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {pendentes.map((p) => (
+          <div key={p.pedidoId} className="bg-white rounded-xl border border-neutral-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <strong>{p.clienteNome}</strong>
+              {p.pixSimulado ? <Badge tone="success">Pago (PIX)</Badge> : <Badge tone="warning">Aguardando pagto</Badge>}
+            </div>
+            <p className="text-sm text-neutral-600">{(p.itensResumo ?? []).join(", ")}</p>
+            <div className="flex items-center justify-between mt-2 text-sm">
+              <span className="font-bold text-primary">{formatPreco(p.valorBruto)}</span>
+              <span className="text-xs text-neutral-500">{formatDataHora(p.criadoEmUtc)}</span>
+            </div>
+            <p className="font-mono text-xs text-neutral-500 mt-1">{String(p.pedidoId).slice(0, 8).toUpperCase()}</p>
+            <div className="flex gap-2 mt-3">
+              <Button size="sm" variant="danger" fullWidth onClick={() => abrirRecusa(p)}>Recusar</Button>
+              <Button size="sm" fullWidth loading={aprovandoId === p.pedidoId} onClick={() => handleAprovar(p.pedidoId)}>Aprovar</Button>
+            </div>
           </div>
-          <p className="text-sm text-neutral-600">{(p.itensResumo ?? []).join(", ")}</p>
-          <div className="flex items-center justify-between mt-2 text-sm">
-            <span className="font-bold text-primary">{formatPreco(p.valorBruto)}</span>
-            <span className="text-xs text-neutral-500">{formatDataHora(p.criadoEmUtc)}</span>
-          </div>
-          <p className="font-mono text-xs text-neutral-500 mt-1">{String(p.pedidoId).slice(0, 8).toUpperCase()}</p>
-          <div className="mt-3">
-            <Button size="sm" fullWidth loading={aprovandoId === p.pedidoId} onClick={() => handleAprovar(p.pedidoId)}>Aprovar</Button>
-          </div>
+        ))}
+      </div>
+      <Modal open={Boolean(pedidoRecusa)} onClose={fecharRecusa} title="Recusar pedido">
+        <p className="text-sm text-neutral-600">
+          Pedido <strong>#{String(pedidoRecusa?.pedidoId ?? "").slice(0, 8).toUpperCase()}</strong> de {pedidoRecusa?.clienteNome}. Ao recusar, o pedido será cancelado e removido da lista de pendentes.
+        </p>
+        <label className="flex flex-col gap-1 text-sm mt-4">
+          <span className="font-medium">Motivo (opcional)</span>
+          <textarea
+            value={motivoRecusa}
+            onChange={(e) => setMotivoRecusa(e.target.value)}
+            maxLength={500}
+            rows={3}
+            placeholder="Ex.: produto esgotado"
+            className="rounded-xl border border-neutral-200 bg-white p-3"
+          />
+        </label>
+        <div className="flex gap-2 mt-5">
+          <Button variant="ghost" fullWidth onClick={fecharRecusa}>Voltar</Button>
+          <Button variant="danger" fullWidth loading={recusandoId === pedidoRecusa?.pedidoId} onClick={handleRecusar}>Recusar pedido</Button>
         </div>
-      ))}
-    </div>
+      </Modal>
+    </>
   )
 }
 

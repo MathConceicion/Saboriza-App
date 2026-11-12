@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GastronomiaMarketplace.Application.Common.Interfaces;
 using GastronomiaMarketplace.Application.Pedidos.Commands.AprovarPedido;
 using GastronomiaMarketplace.Application.Pedidos.Commands.CriarPedido;
+using GastronomiaMarketplace.Application.Pedidos.Commands.RecusarPedido;
 using GastronomiaMarketplace.Application.Pedidos.Queries.ListarMeusPedidos;
 using GastronomiaMarketplace.Infrastructure.Persistence;
 
@@ -49,12 +50,7 @@ public sealed class PedidosController : ControllerBase
     [Authorize(Policy = "VendedorAprovado")]
     public async Task<IActionResult> Aprovar(Guid id, CancellationToken ct)
     {
-        var pedidoResource = await _db.Pedidos.AsNoTracking().Where(p => p.Id == id).Select(p => new Policies.PedidoResource(p.Id, p.Loja.VendedorId)).FirstOrDefaultAsync(ct);
-        if (pedidoResource is not null)
-        {
-            var authResult = await _auth.AuthorizeAsync(User, pedidoResource, "VendorOwnerOrAdmin");
-            if (!authResult.Succeeded) return Forbid();
-        }
+        if (!await PodeGerenciarPedidoAsync(id, ct)) return Forbid();
         var cmd = new AprovarPedidoCommand(
             PedidoId: id,
             AtorUsuarioId: _currentUser.UserId!.Value,
@@ -64,6 +60,24 @@ public sealed class PedidosController : ControllerBase
         var result = await _mediator.Send(cmd, ct);
         return result.IsSuccess
             ? Ok(new { pedidoId = result.Value, status = "EmPreparo" })
+            : BadRequest(new { error = result.Error });
+    }
+
+    [HttpPost("{id:guid}/recusar")]
+    [Authorize(Policy = "VendedorAprovado")]
+    public async Task<IActionResult> Recusar(Guid id, [FromBody] RecusarPedidoDto dto, CancellationToken ct)
+    {
+        if (!await PodeGerenciarPedidoAsync(id, ct)) return Forbid();
+        var cmd = new RecusarPedidoCommand(
+            PedidoId: id,
+            AtorUsuarioId: _currentUser.UserId!.Value,
+            AtorVendorId: _currentUser.VendorId,
+            IsAdmin: _currentUser.IsAdmin,
+            Motivo: dto.Motivo
+        );
+        var result = await _mediator.Send(cmd, ct);
+        return result.IsSuccess
+            ? Ok(new { pedidoId = result.Value, status = "Cancelado" })
             : BadRequest(new { error = result.Error });
     }
 
@@ -102,6 +116,17 @@ public sealed class PedidosController : ControllerBase
         });
     }
 
+    private async Task<bool> PodeGerenciarPedidoAsync(Guid pedidoId, CancellationToken ct)
+    {
+        var pedidoResource = await _db.Pedidos.AsNoTracking()
+            .Where(p => p.Id == pedidoId)
+            .Select(p => new Policies.PedidoResource(p.Id, p.Loja.VendedorId))
+            .FirstOrDefaultAsync(ct);
+        if (pedidoResource is null) return true;
+        var authResult = await _auth.AuthorizeAsync(User, pedidoResource, "VendorOwnerOrAdmin");
+        return authResult.Succeeded;
+    }
+
     private static string GerarBrCodeFicticio(Guid pedidoId, decimal valor)
     {
         var valorStr = valor.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
@@ -112,3 +137,4 @@ public sealed class PedidosController : ControllerBase
 
 public sealed record CriarPedidoDto(Guid LojaId, List<CriarPedidoItemInput> Itens);
 public sealed record CriarPedidoItemInput(Guid ProdutoId, int Quantidade);
+public sealed record RecusarPedidoDto(string? Motivo);

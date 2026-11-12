@@ -18,35 +18,35 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
-      <div className="px-4 sm:px-6 lg:px-12 py-2 sm:h-16 sm:py-0 flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-2 sm:gap-x-4">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-2 px-3 py-2 sm:h-16 sm:flex-nowrap sm:gap-x-4 sm:px-6 sm:py-0 lg:px-12">
         <Link to="/buscar" aria-label="Saboriza - marketplace" className="order-1 flex shrink-0 items-center">
-          <img src="/favicon.ico" alt="Logo Saboriza" className="h-10 w-10 rounded-full object-cover" />
+          <img src="/favicon.ico" alt="Logo Saboriza" className="h-9 w-9 rounded-full object-cover sm:h-10 sm:w-10" />
         </Link>
-        <div className="order-3 w-full sm:order-2 sm:w-auto sm:flex-1 sm:max-w-xl">
+        <div className="order-3 w-full min-w-0 sm:order-2 sm:w-auto sm:flex-1 sm:max-w-xl">
           <StoreSearch />
         </div>
-        <nav className="order-2 ml-auto flex items-center gap-2 sm:order-3 sm:gap-3">
+        <nav className="order-2 ml-auto flex min-w-0 items-center gap-1.5 sm:order-3 sm:gap-3">
           <HybridButton />
           {user ? (
             <>
               {!user.isAdmin && !isVendorAprovado && !isVendedor ? (
-                <Link to="/vender" className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg">
-                  <Icon name="store" className="h-4 w-4" />
-                  Quero vender
+                <Link to="/vender" aria-label="Quero vender" title="Quero vender" className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-3 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-primary-dark hover:shadow-lg sm:px-5">
+                  <Icon name="store" className="h-4 w-4 shrink-0" />
+                  <span className="hidden whitespace-nowrap sm:inline">Quero vender</span>
                 </Link>
               ) : null}
               {!user.isAdmin ? (
-                <Link to="/checkout" aria-label={`Abrir carrinho com ${qtdCarrinho} itens`} className="relative text-neutral-600 hover:text-primary border border-neutral-200 rounded-full p-2">
+                <Link to="/checkout" aria-label={`Abrir carrinho com ${qtdCarrinho} itens`} className="relative shrink-0 rounded-full border border-neutral-200 p-2 text-neutral-600 hover:text-primary">
                   <Icon name="cart" className="h-5 w-5" />
-                  {qtdCarrinho > 0 ? <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 min-w-5 px-1 flex items-center justify-center">{qtdCarrinho}</span> : null}
+                  {qtdCarrinho > 0 ? <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs text-white">{qtdCarrinho}</span> : null}
                 </Link>
               ) : null}
-              <div className="relative group">
-                <Link to="/conta" aria-label="Minha conta" className="block text-neutral-600 hover:text-primary border border-neutral-200 rounded-full p-2">
+              <div className="group relative shrink-0">
+                <Link to="/conta" aria-label="Minha conta" className="block rounded-full border border-neutral-200 p-2 text-neutral-600 hover:text-primary">
                   <Icon name="user" className="h-5 w-5" />
                 </Link>
-                <div className="absolute right-0 top-full pt-2 hidden group-hover:block">
-                  <div className="bg-white rounded-xl border border-neutral-200 shadow-card py-1 w-44">
+                <div className="absolute right-0 top-full hidden pt-2 group-hover:block">
+                  <div className="w-44 rounded-xl border border-neutral-200 bg-white py-1 shadow-card">
                     <Link to="/buscar" className="block px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-neutral-100 hover:text-primary">Pedir</Link>
                     <Link to="/meus-pedidos" className="block px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-neutral-100 hover:text-primary">Meus pedidos</Link>
                     <Link to="/conta" className="block px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-primary">Minha conta</Link>
@@ -54,14 +54,14 @@ export function Header() {
                   </div>
                 </div>
               </div>
-              <button onClick={handleSair} aria-label="Sair" className="text-danger hover:opacity-70 border border-neutral-200 rounded-full p-2">
+              <button onClick={handleSair} aria-label="Sair" className="shrink-0 rounded-full border border-neutral-200 p-2 text-danger hover:opacity-70">
                 <Icon name="logout" className="h-5 w-5" />
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-primary font-semibold text-sm">Entrar</Link>
-              <Link to="/registro" className="bg-primary text-white rounded-full px-4 py-2 text-sm font-semibold hover:bg-primary-dark">Cadastrar</Link>
+              <Link to="/login" className="whitespace-nowrap text-sm font-semibold text-primary">Entrar</Link>
+              <Link to="/registro" className="whitespace-nowrap rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark">Cadastrar</Link>
             </>
           )}
         </nav>

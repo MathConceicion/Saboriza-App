@@ -13,8 +13,8 @@ public sealed class ListarAgendaDoDiaQueryHandler : IRequestHandler<ListarAgenda
     public async Task<IReadOnlyList<ItemAgendaDto>> Handle(ListarAgendaDoDiaQuery request, CancellationToken ct)
     {
         var dia = request.Data?.Date ?? DateTime.UtcNow.Date;
-        var inicio = dia;
-        var fim = dia.AddDays(1);
+        var inicio = DateTime.SpecifyKind(dia, DateTimeKind.Utc);
+        var fim = inicio.AddDays(1);
         var baseQuery = _db.ItensAgenda
             .AsNoTracking()
             .Where(a => a.LojaId == request.LojaId)

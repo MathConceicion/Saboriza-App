@@ -56,6 +56,15 @@ public sealed class Pedido : AggregateRoot
         AddDomainEvent(new PedidoAprovadoEvent(Id, LojaId, aprovadoEmUtc));
     }
 
+    public void Recusar(string? motivo, DateTime recusadoEmUtc)
+    {
+        if (Status != StatusPedido.Pendente)
+            throw new RegraDeNegocioException($"Pedido só pode ser recusado enquanto Pendente. Status atual: {Status}.");
+        Status = StatusPedido.Cancelado;
+        MotivoCancelamento = motivo;
+        AtualizadoEmUtc = recusadoEmUtc;
+    }
+
     public void MarcarProntoParaRetirada()
     {
         if (Status != StatusPedido.EmPreparo)

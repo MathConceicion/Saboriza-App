@@ -13,6 +13,9 @@ export const pedidosService = {
   aprovar(pedidoId) {
     return apiClient.post(`/api/pedidos/${pedidoId}/aprovar`).then((r) => r.data)
   },
+  recusar(pedidoId, motivo) {
+    return apiClient.post(`/api/pedidos/${pedidoId}/recusar`, { motivo: motivo || null }).then((r) => r.data)
+  },
   simularPix(pedidoId) {
     return apiClient.post(`/api/pedidos/${pedidoId}/simular-pix`).then((r) => r.data)
   },
