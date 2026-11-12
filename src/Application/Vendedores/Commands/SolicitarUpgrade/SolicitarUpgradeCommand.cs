@@ -17,7 +17,9 @@ public sealed record SolicitarUpgradeCommand(
     string? Cnpj,
     string? FotoUrl = null,
     string? HorarioAbertura = null,
-    string? HorarioFechamento = null
+    string? HorarioFechamento = null,
+    string? DiasFuncionamentoJson = null,
+    bool? Aberta = null
 ) : IRequest<Result<Guid>>;
 
 public sealed class SolicitarUpgradeCommandHandler : IRequestHandler<SolicitarUpgradeCommand, Result<Guid>>
@@ -62,6 +64,22 @@ public sealed class SolicitarUpgradeCommandHandler : IRequestHandler<SolicitarUp
                 return Result<Guid>.Failure(ex.Message);
             }
         }
+        string? diasJson = null;
+        if (!string.IsNullOrWhiteSpace(request.DiasFuncionamentoJson))
+        {
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(request.DiasFuncionamentoJson);
+                if (doc.RootElement.ValueKind != System.Text.Json.JsonValueKind.Array)
+                    return Result<Guid>.Failure("Dias de funcionamento deve ser uma lista.");
+                diasJson = request.DiasFuncionamentoJson;
+            }
+            catch
+            {
+                return Result<Guid>.Failure("Dias de funcionamento inválidos.");
+            }
+        }
+        var aberta = request.Aberta ?? true;
         var vendedor = new Vendedor(
             usuarioId: request.UsuarioId,
             nomeLoja: request.NomeLoja,
@@ -73,7 +91,9 @@ public sealed class SolicitarUpgradeCommandHandler : IRequestHandler<SolicitarUp
             latitude: coord.Latitude,
             longitude: coord.Longitude,
             fotoUrl: request.FotoUrl,
-            horarioFuncionamentoJson: horarioJson
+            horarioFuncionamentoJson: horarioJson,
+            diasFuncionamentoJson: diasJson,
+            aberta: aberta
         );
         _db.Vendedores.Add(vendedor);
         usuario.PromoverParaVendedor();

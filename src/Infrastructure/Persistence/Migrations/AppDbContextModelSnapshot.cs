@@ -309,6 +309,11 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<bool>("Aberta")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("Aprovado")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -329,11 +334,17 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(9)");
 
+                    b.Property<string>("Cnpj")
+                        .HasColumnType("varchar(14)");
+
                     b.Property<DateTime>("CriadoEmUtc")
                         .HasColumnType("timestamptz");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("text");
+
+                    b.Property<string>("DiasFuncionamentoJson")
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("EnderecoComercial")
                         .IsRequired()
@@ -360,6 +371,9 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
 
                     b.Property<decimal?>("TaxaComissaoPercentual")
                         .HasColumnType("numeric(5,2)");
+
+                    b.Property<string>("Telefone")
+                        .HasColumnType("varchar(20)");
 
                     b.Property<Guid>("VendedorId")
                         .HasColumnType("uuid");
@@ -585,6 +599,11 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<bool>("Aberta")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<DateTime?>("AtualizadoEmUtc")
                         .HasColumnType("timestamptz");
 
@@ -600,6 +619,9 @@ namespace GastronomiaMarketplace.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("CriadoEmUtc")
                         .HasColumnType("timestamptz");
+
+                    b.Property<string>("DiasFuncionamentoJson")
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("EnderecoComercial")
                         .IsRequired()

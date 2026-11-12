@@ -21,6 +21,10 @@ export function validarHora(hora) {
   return h >= 0 && h <= 23 && min >= 0 && min <= 59
 }
 
+export function validarDiasFuncionamento(dias) {
+  return Array.isArray(dias) && dias.length > 0
+}
+
 export function parseValidationErrors(error) {
   const data = error?.response?.data
   if (data?.errors && typeof data.errors === "object") return data.errors

@@ -29,7 +29,7 @@ public sealed class VendedorController : ControllerBase
     [Authorize]
     public async Task<IActionResult> SolicitarUpgrade([FromBody] SolicitarUpgradeDto dto, CancellationToken ct)
     {
-        var cmd = new SolicitarUpgradeCommand(_currentUser.UserId!.Value, dto.NomeLoja, dto.CategoriaLojaId, dto.EnderecoComercial, dto.Cep, dto.Telefone, dto.Cnpj, dto.FotoUrl, dto.HorarioAbertura, dto.HorarioFechamento);
+        var cmd = new SolicitarUpgradeCommand(_currentUser.UserId!.Value, dto.NomeLoja, dto.CategoriaLojaId, dto.EnderecoComercial, dto.Cep, dto.Telefone, dto.Cnpj, dto.FotoUrl, dto.HorarioAbertura, dto.HorarioFechamento, dto.DiasFuncionamentoJson, dto.Aberta);
         var result = await _mediator.Send(cmd, ct);
         return result.IsSuccess ? Ok(new { vendedorId = result.Value, status = "PendenteAprovacao" }) : BadRequest(new { error = result.Error });
     }
@@ -58,7 +58,7 @@ public sealed class VendedorController : ControllerBase
     public async Task<IActionResult> AtualizarLoja([FromBody] AtualizarLojaDto dto, CancellationToken ct)
     {
         if (_currentUser.LojaId is null) return BadRequest(new { error = "Vendedor sem loja vinculada." });
-        var result = await _mediator.Send(new AtualizarLojaCommand(_currentUser.LojaId.Value, dto.Nome, dto.Descricao, dto.FotoUrl, dto.HorarioAbertura, dto.HorarioFechamento), ct);
+        var result = await _mediator.Send(new AtualizarLojaCommand(_currentUser.LojaId.Value, dto.Nome, dto.Descricao, dto.FotoUrl, dto.Cnpj, dto.Telefone, dto.EnderecoComercial, dto.Cep, dto.DiasFuncionamentoJson, dto.Aberta, dto.HorarioAbertura, dto.HorarioFechamento), ct);
         return result.IsSuccess ? NoContent() : BadRequest(new { error = result.Error });
     }
 
@@ -89,6 +89,6 @@ public sealed class VendedorController : ControllerBase
     }
 }
 
-public sealed record SolicitarUpgradeDto(string NomeLoja, Guid CategoriaLojaId, string EnderecoComercial, string Cep, string Telefone, string? Cnpj, string? FotoUrl, string? HorarioAbertura = null, string? HorarioFechamento = null);
-public sealed record AtualizarLojaDto(string Nome, string? Descricao, string? FotoUrl, string? HorarioAbertura = null, string? HorarioFechamento = null);
+public sealed record SolicitarUpgradeDto(string NomeLoja, Guid CategoriaLojaId, string EnderecoComercial, string Cep, string Telefone, string? Cnpj, string? FotoUrl, string? HorarioAbertura = null, string? HorarioFechamento = null, string? DiasFuncionamentoJson = null, bool? Aberta = null);
+public sealed record AtualizarLojaDto(string Nome, string? Descricao, string? FotoUrl, string? Cnpj, string? Telefone, string? EnderecoComercial, string? Cep, string? DiasFuncionamentoJson, bool? Aberta, string? HorarioAbertura = null, string? HorarioFechamento = null);
 public sealed record AvancarDto(string NovoStatus);

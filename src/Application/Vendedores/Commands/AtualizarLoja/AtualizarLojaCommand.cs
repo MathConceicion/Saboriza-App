@@ -8,5 +8,11 @@ public sealed record AtualizarLojaCommand(
     string Nome,
     string? Descricao,
     string? FotoUrl,
+    string? Cnpj,
+    string? Telefone,
+    string? EnderecoComercial,
+    string? Cep,
+    string? DiasFuncionamentoJson,
+    bool? Aberta,
     string? HorarioAbertura = null,
     string? HorarioFechamento = null) : IRequest<Result<Guid>>;

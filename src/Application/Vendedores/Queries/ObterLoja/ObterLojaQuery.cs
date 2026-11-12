@@ -14,6 +14,10 @@ public sealed record LojaDto(
     string? Descricao,
     string? FotoUrl,
     bool Ativo,
+    string? Cnpj,
+    string? Telefone,
+    bool Aberta,
+    IReadOnlyList<string>? DiasFuncionamento = null,
     string? HorarioAbertura = null,
     string? HorarioFechamento = null,
     bool? AbertoAgora = null);

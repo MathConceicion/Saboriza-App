@@ -25,6 +25,8 @@ public sealed class VendedorConfiguration : IEntityTypeConfiguration<Vendedor>
         b.Property(v => v.Status).HasColumnType("smallint").IsRequired();
         b.Property(v => v.MotivoRejeicao).HasColumnType("varchar(500)");
         b.Property(v => v.HorarioFuncionamentoJson).HasColumnType("jsonb");
+        b.Property(v => v.DiasFuncionamentoJson).HasColumnType("jsonb");
+        b.Property(v => v.Aberta).HasColumnType("boolean").HasDefaultValue(true);
         b.Property(v => v.CriadoEmUtc).HasColumnType("timestamptz").IsRequired();
         b.Property(v => v.AtualizadoEmUtc).HasColumnType("timestamptz");
         b.Property(v => v.IsDeleted).HasColumnType("boolean").HasDefaultValue(false);

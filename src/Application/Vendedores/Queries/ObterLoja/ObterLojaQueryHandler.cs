@@ -33,11 +33,16 @@ public sealed class ObterLojaQueryHandler : IRequestHandler<ObterLojaQuery, Resu
                 l.Descricao,
                 l.FotoUrl,
                 l.Ativo,
+                l.Cnpj,
+                l.Telefone,
+                l.Aberta,
+                l.DiasFuncionamentoJson,
                 l.HorarioFuncionamentoJson
             })
             .FirstOrDefaultAsync(ct);
         if (bruto is null) return Result<LojaDto>.Failure("Loja não encontrada.");
         var horario = HorarioHelper.ExtrairHorario(bruto.HorarioFuncionamentoJson);
+        var dias = HorarioHelper.ExtrairDias(bruto.DiasFuncionamentoJson);
         var dto = new LojaDto(
             bruto.Id,
             bruto.Nome,
@@ -47,6 +52,10 @@ public sealed class ObterLojaQueryHandler : IRequestHandler<ObterLojaQuery, Resu
             bruto.Descricao,
             bruto.FotoUrl,
             bruto.Ativo,
+            bruto.Cnpj,
+            bruto.Telefone,
+            bruto.Aberta,
+            dias,
             horario?.Abertura,
             horario?.Fechamento,
             HorarioHelper.AbertoAgora(bruto.HorarioFuncionamentoJson, _clock.UtcNow));

@@ -1,5 +1,6 @@
 namespace GastronomiaMarketplace.Domain.Entities;
 
+using System.Text.Json;
 using GastronomiaMarketplace.Domain.Common;
 using GastronomiaMarketplace.Domain.Enums;
 using GastronomiaMarketplace.Domain.Exceptions;
@@ -21,11 +22,13 @@ public sealed class Vendedor : BaseEntity
     public StatusVendedor Status { get; private set; } = StatusVendedor.PendenteAprovacao;
     public string? MotivoRejeicao { get; private set; }
     public string? HorarioFuncionamentoJson { get; private set; }
+    public string? DiasFuncionamentoJson { get; private set; }
+    public bool Aberta { get; private set; }
     public Loja? Loja { get; private set; }
 
     private Vendedor() { }
 
-    public Vendedor(Guid usuarioId, string nomeLoja, Guid categoriaLojaId, string enderecoComercial, string cep, string telefone, string? cnpj, double latitude, double longitude, string? fotoUrl = null, string? horarioFuncionamentoJson = null)
+    public Vendedor(Guid usuarioId, string nomeLoja, Guid categoriaLojaId, string enderecoComercial, string cep, string telefone, string? cnpj, double latitude, double longitude, string? fotoUrl = null, string? horarioFuncionamentoJson = null, string? diasFuncionamentoJson = null, bool aberta = true)
     {
         if (usuarioId == Guid.Empty) throw new RegraDeNegocioException("UsuarioId obrigatório.");
         if (string.IsNullOrWhiteSpace(nomeLoja)) throw new RegraDeNegocioException("NomeLoja obrigatório.");
@@ -40,6 +43,9 @@ public sealed class Vendedor : BaseEntity
         Latitude = latitude;
         Longitude = longitude;
         Status = StatusVendedor.PendenteAprovacao;
+        HorarioFuncionamentoJson = horarioFuncionamentoJson;
+        DiasFuncionamentoJson = diasFuncionamentoJson;
+        Aberta = aberta;
         if (!string.IsNullOrWhiteSpace(horarioFuncionamentoJson))
             DefinirHorarioFuncionamentoJson(horarioFuncionamentoJson);
     }
@@ -70,5 +76,28 @@ public sealed class Vendedor : BaseEntity
         var horario = ValueObjects.HorarioFuncionamento.FromJson(json);
         if (horario is null) throw new RegraDeNegocioException("Horário de funcionamento inválido.");
         HorarioFuncionamentoJson = horario.ToJson();
+    }
+
+    public void DefinirDiasFuncionamento(string? diasFuncionamentoJson)
+    {
+        if (!string.IsNullOrWhiteSpace(diasFuncionamentoJson))
+        {
+            using var doc = JsonDocument.Parse(diasFuncionamentoJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Array) throw new RegraDeNegocioException("Dias de funcionamento deve ser uma lista.");
+        }
+        DiasFuncionamentoJson = diasFuncionamentoJson;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void AlternarStatusAberta()
+    {
+        Aberta = !Aberta;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void DefinirStatusAberta(bool aberta)
+    {
+        Aberta = aberta;
+        AtualizadoEmUtc = DateTime.UtcNow;
     }
 }

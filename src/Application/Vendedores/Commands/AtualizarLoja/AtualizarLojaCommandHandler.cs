@@ -18,6 +18,9 @@ public sealed class AtualizarLojaCommandHandler : IRequestHandler<AtualizarLojaC
         try
         {
             loja.AtualizarPerfil(request.Nome, request.Descricao, request.FotoUrl);
+            loja.DefinirInformacoesLoja(request.Cnpj, request.Telefone, request.EnderecoComercial, request.Cep);
+            loja.DefinirDiasFuncionamento(request.DiasFuncionamentoJson);
+            if (request.Aberta.HasValue) loja.DefinirStatusAberta(request.Aberta.Value);
             var temAbertura = !string.IsNullOrWhiteSpace(request.HorarioAbertura);
             var temFechamento = !string.IsNullOrWhiteSpace(request.HorarioFechamento);
             if (temAbertura != temFechamento) return Result<Guid>.Failure("Informe abertura e fechamento juntos.");

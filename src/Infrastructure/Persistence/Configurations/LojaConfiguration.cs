@@ -23,6 +23,10 @@ public sealed class LojaConfiguration : IEntityTypeConfiguration<Loja>
         b.HasOne(l => l.CategoriaLoja).WithMany(c => c.Lojas).HasForeignKey(l => l.CategoriaLojaId).OnDelete(DeleteBehavior.Restrict);
         b.HasOne(l => l.Vendedor).WithOne(v => v.Loja).HasForeignKey<Loja>(l => l.VendedorId).OnDelete(DeleteBehavior.Cascade);
         b.Property(l => l.HorarioFuncionamentoJson).HasColumnType("jsonb");
+        b.Property(l => l.Cnpj).HasColumnType("varchar(14)");
+        b.Property(l => l.Telefone).HasColumnType("varchar(20)");
+        b.Property(l => l.DiasFuncionamentoJson).HasColumnType("jsonb");
+        b.Property(l => l.Aberta).HasColumnType("boolean").HasDefaultValue(true);
         b.Property(l => l.TaxaComissaoPercentual).HasColumnType("numeric(5,2)");
         b.Property(l => l.Descricao).HasColumnType("text");
         b.Property(l => l.FotoUrl).HasColumnType("varchar(500)");

@@ -73,7 +73,7 @@ public sealed class AdminController : ControllerBase
         vendedor.Aprovar();
         var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
         var point = factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(vendedor.Longitude, vendedor.Latitude));
-        var loja = new Domain.Entities.Loja(vendedor.Id, vendedor.NomeLoja, vendedor.CategoriaLojaId, vendedor.EnderecoComercial, vendedor.Cep, point, vendedor.FotoUrl);
+        var loja = new Domain.Entities.Loja(vendedor.Id, vendedor.NomeLoja, vendedor.CategoriaLojaId, vendedor.EnderecoComercial, vendedor.Cep, point, vendedor.FotoUrl, vendedor.Cnpj, vendedor.Telefone, vendedor.DiasFuncionamentoJson, vendedor.Aberta);
         loja.Aprovar();
         if (!string.IsNullOrWhiteSpace(vendedor.HorarioFuncionamentoJson))
         {

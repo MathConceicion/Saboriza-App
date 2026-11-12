@@ -1,5 +1,6 @@
 namespace GastronomiaMarketplace.Domain.Entities;
 
+using System.Text.Json;
 using GastronomiaMarketplace.Domain.Common;
 using NetTopologySuite.Geometries;
 
@@ -18,11 +19,15 @@ public sealed class Loja : AggregateRoot
     public string? Descricao { get; private set; }
     public string? FotoUrl { get; private set; }
     public string? HorarioFuncionamentoJson { get; private set; }
+    public string? Cnpj { get; private set; }
+    public string? Telefone { get; private set; }
+    public string? DiasFuncionamentoJson { get; private set; }
+    public bool Aberta { get; private set; }
     public decimal? TaxaComissaoPercentual { get; private set; }
 
     private Loja() { }
 
-    public Loja(Guid vendedorId, string nome, Guid categoriaId, string endereco, string cep, Point localizacao, string? fotoUrl = null)
+    public Loja(Guid vendedorId, string nome, Guid categoriaId, string endereco, string cep, Point localizacao, string? fotoUrl = null, string? cnpj = null, string? telefone = null, string? diasFuncionamentoJson = null, bool aberta = true)
     {
         VendedorId = vendedorId;
         Nome = nome;
@@ -31,6 +36,10 @@ public sealed class Loja : AggregateRoot
         Cep = cep;
         Localizacao = localizacao;
         FotoUrl = fotoUrl?.Trim();
+        Cnpj = string.IsNullOrWhiteSpace(cnpj) ? null : cnpj.Trim();
+        Telefone = string.IsNullOrWhiteSpace(telefone) ? null : telefone.Trim();
+        DiasFuncionamentoJson = diasFuncionamentoJson;
+        Aberta = aberta;
         Ativo = true;
         Aprovado = false;
     }
@@ -54,6 +63,38 @@ public sealed class Loja : AggregateRoot
         Nome = nome.Trim();
         Descricao = string.IsNullOrWhiteSpace(descricao) ? null : descricao.Trim();
         FotoUrl = string.IsNullOrWhiteSpace(fotoUrl) ? null : fotoUrl.Trim();
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void DefinirInformacoesLoja(string? cnpj, string? telefone, string? enderecoComercial, string? cep)
+    {
+        Cnpj = string.IsNullOrWhiteSpace(cnpj) ? null : cnpj.Trim();
+        Telefone = string.IsNullOrWhiteSpace(telefone) ? null : telefone.Trim();
+        if (!string.IsNullOrWhiteSpace(enderecoComercial)) EnderecoComercial = enderecoComercial.Trim();
+        if (!string.IsNullOrWhiteSpace(cep)) Cep = cep.Trim();
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void DefinirDiasFuncionamento(string? diasFuncionamentoJson)
+    {
+        if (!string.IsNullOrWhiteSpace(diasFuncionamentoJson))
+        {
+            using var doc = JsonDocument.Parse(diasFuncionamentoJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Array) throw new Exceptions.RegraDeNegocioException("Dias de funcionamento deve ser uma lista.");
+        }
+        DiasFuncionamentoJson = diasFuncionamentoJson;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void AlternarStatusAberta()
+    {
+        Aberta = !Aberta;
+        AtualizadoEmUtc = DateTime.UtcNow;
+    }
+
+    public void DefinirStatusAberta(bool aberta)
+    {
+        Aberta = aberta;
         AtualizadoEmUtc = DateTime.UtcNow;
     }
 
